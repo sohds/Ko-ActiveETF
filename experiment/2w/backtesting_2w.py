@@ -72,12 +72,15 @@ def get_period_return(ticker, start, end, method="close"):
     try:
         df = fdr.DataReader(ticker, start, end)
         if df.empty or len(df) < 2:
+            print(f"[FDR] {ticker} {start}~{end}: 빈 데이터 (len={len(df) if not df.empty else 0})")
             return 0
         entry, exit_ = _get_entry_exit_price(df, method)
         if entry == 0:
+            print(f"[FDR] {ticker} {start}~{end}: 시가 0")
             return 0
         return (exit_ / entry) - 1
-    except Exception:
+    except Exception as e:
+        print(f"[FDR] {ticker} {start}~{end}: {type(e).__name__} — {e}")
         return 0
 
 
